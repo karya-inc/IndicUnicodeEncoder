@@ -1,4 +1,4 @@
-from encoder import EncoderBuilder
+from indic_unicode_encoder.encoder import EncoderBuilder
 from os import path
 
 mappings_path = path.join(path.dirname(__file__), "char_mappings.csv")
@@ -10,5 +10,4 @@ LimbuEncoder = (
     .mappings_file(mappings_path)
     .prefix_file(prefix_path)
     .priorities_file(sign_priorities_path)
-    .build()
 )
