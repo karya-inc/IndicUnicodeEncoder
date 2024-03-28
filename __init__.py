@@ -110,8 +110,10 @@ class Encoder:
 
             if matching_mapping.signs is not None:
                 for sign in matching_mapping.signs:
-                    # Composite maps always apply symbols after
-                    if sign in self.prefix_signs and not is_composite_map:
+                    # Composite maps always apply signs after consonant
+                    if is_composite_map:
+                         prefix_signs.append(sign)
+                    elif sign in self.prefix_signs:
                         prefix_signs.append(sign)
                     else:
                         signs.append(sign)
