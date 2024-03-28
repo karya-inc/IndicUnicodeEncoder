@@ -100,7 +100,9 @@ class Encoder:
 
         for char in data:
             if char not in self.__mappings_avilable_for:
-                encoded_sentence += char
+                encoded_sentence += self.__sign_string(signs) + char
+                signs = []
+                prefix_signs = []
                 continue
 
             matching_mapping = next(
