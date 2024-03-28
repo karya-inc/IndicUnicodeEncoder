@@ -5,6 +5,10 @@ import pandas as pd
 from typing import Optional
 
 
+def sanitize_str(data: str):
+    return data.strip().replace("\u200c", "")
+
+
 def read_csv_to_list(filename: str) -> list[dict[str, str | float | None]]:
     ext = filename.split(".")[-1]
     match ext:
@@ -42,17 +46,17 @@ class EncodingMapping:
         if alphabet is None or (type(alphabet) == float and math.isnan(alphabet)):
             raise AttributeError(f"Missing value for alphabet in dict: {data}")
         else:
-            alphabet = str(alphabet)
+            alphabet = sanitize_str(str(alphabet))
 
         if type(consonant) == float and math.isnan(consonant):
             consonant = None
         else:
-            consonant = str(consonant)
+            consonant = sanitize_str(str(consonant))
 
         if type(signs) == float and math.isnan(signs):
             signs = None
         else:
-            signs = str(signs)
+            signs = sanitize_str(str(signs))
 
         return EncodingMapping(alphabet, consonant, signs)
 
@@ -112,14 +116,16 @@ class Encoder:
                 for sign in matching_mapping.signs:
                     # Composite maps always apply signs after consonant
                     if is_composite_map:
-                         prefix_signs.append(sign)
+                        prefix_signs.append(sign)
                     elif sign in self.prefix_signs:
                         prefix_signs.append(sign)
                     else:
                         signs.append(sign)
 
             if matching_mapping.consonant is not None:
-                encoded_sentence += self.__sign_string(signs) + matching_mapping.consonant
+                encoded_sentence += (
+                    self.__sign_string(signs) + matching_mapping.consonant
+                )
                 signs = prefix_signs
                 prefix_signs = []
         return encoded_sentence + self.__sign_string(signs)
@@ -167,17 +173,16 @@ class EncoderBuilder:
 
         priorities = list(
             map(
-                lambda data: str(data["unicode"])[0],
+                lambda data: sanitize_str(str(data["unicode"]))[0],
                 read_csv_to_list(self.__priorities_file),
             )
         )
 
         prefix_signs = list(
             map(
-                lambda data: str(data["unicode"])[0],
+                lambda data: sanitize_str(str(data["unicode"]))[0],
                 read_csv_to_list(self.__prefix_file),
             )
         )
 
         return Encoder(mappings, priorities, prefix_signs)
-    
