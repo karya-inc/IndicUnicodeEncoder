@@ -1,5 +1,6 @@
 import json
 import math
+import sys
 import pandas as pd
 from typing import Optional
 
@@ -74,8 +75,15 @@ class Encoder:
 
         self.__mappings_avilable_for = set([mapping.alphabet for mapping in mappings])
 
+    def __get_priority(self, sign: str):
+        try:
+            return self.sign_priorities.index(sign)
+        except ValueError:
+            # return max unicode value supported by python if sign not found
+            return sys.maxunicode
+
     def __sort_signs(self, signs: list[str]):
-        return sorted(signs, key=lambda s: self.sign_priorities.index(s))
+        return sorted(signs, key=lambda s: self.__get_priority(s))
 
     def __sign_string(self, signs: list[str]):
         sorted_signs = self.__sort_signs(signs)
