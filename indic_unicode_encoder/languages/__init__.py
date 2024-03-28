@@ -1,5 +1,5 @@
-from src.languages.lepcha import LepchaEncoder
-from src.languages.limbu import LimbuEncoder
+from languages.lepcha import LepchaEncoder
+from languages.limbu import LimbuEncoder
 
 
 def get_ecoder(lang: str):
