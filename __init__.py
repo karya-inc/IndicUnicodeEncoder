@@ -117,9 +117,10 @@ class Encoder:
                         signs.append(sign)
 
             if matching_mapping.consonant is not None:
-                encoded_sentence += self.__sign_string(signs)
+                encoded_sentence += self.__sign_string(signs) + matching_mapping.consonant
                 signs = prefix_signs
                 prefix_signs = []
+        return encoded_sentence + self.__sign_string(signs)
 
 
 class EncoderBuilder:
