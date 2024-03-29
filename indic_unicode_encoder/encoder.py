@@ -187,7 +187,7 @@ class EncoderBuilder:
             )
         )
 
-    def __call__(self):
-        self.build()
-
         return Encoder(mappings, priorities, prefix_signs)
+
+    def __call__(self):
+        return self.build()
