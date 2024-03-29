@@ -13,13 +13,20 @@ def read_csv_to_list(filename: str) -> list[dict[str, str | float | None]]:
     ext = filename.split(".")[-1]
     match ext:
         case "json":
-            with open(filename, "r") as f:
-                raw_json = f.read()
-                return json.loads(raw_json)
+            try:
+                with open(filename, "r") as f:
+                    raw_json = f.read()
+                    return json.loads(raw_json)
+
+            except:
+                return []
 
         case "csv":
-            df = pd.read_csv(filename)
-            return df.to_dict("records")
+            try:
+                df = pd.read_csv(filename)
+                return df.to_dict("records")
+            except:
+                return []
 
         case _:
             raise AttributeError(
