@@ -4,6 +4,8 @@ import sys
 import pandas as pd
 from typing import Optional
 
+from pandas.io.parsers.readers import csv
+
 
 def sanitize_str(data: str):
     return data.strip().replace("\u200c", "")
@@ -13,20 +15,13 @@ def read_csv_to_list(filename: str) -> list[dict[str, str | float | None]]:
     ext = filename.split(".")[-1]
     match ext:
         case "json":
-            try:
-                with open(filename, "r") as f:
-                    raw_json = f.read()
-                    return json.loads(raw_json)
-
-            except:
-                return []
+            with open(filename, "r") as f:
+                raw_json = f.read()
+                return json.loads(raw_json)
 
         case "csv":
-            try:
-                df = pd.read_csv(filename)
-                return df.to_dict("records")
-            except:
-                return []
+            df = pd.read_csv(filename, quoting=csv.QUOTE_NONE)
+            return df.to_dict("records")
 
         case _:
             raise AttributeError(
